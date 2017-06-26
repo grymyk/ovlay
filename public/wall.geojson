@@ -1,0 +1,81 @@
+{
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "level": 1,
+        "name": "top",
+        "height": 15,
+        "base_height": 15,
+        "color": "salmon"
+      },
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              -122.416608,
+              37.807246
+            ],
+            [
+              -122.416844,
+              37.807220
+            ],
+            [
+              -122.416881,
+              37.807356
+            ],
+            [
+              -122.416645,
+              37.807386
+            ],
+            [
+              -122.416608,
+              37.807246
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "06e8fa0b3f851e3ae0e1da5fc17e111e"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "level": 1,
+        "name": "bottom",
+        "height": 0,
+        "base_height": 0,
+        "color": "red"
+      },
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              -122.416608,
+              37.807246
+            ],
+            [
+              -122.416844,
+              37.807220
+            ],
+            [
+              -122.416881,
+              37.807356
+            ],
+            [
+              -122.416645,
+              37.807386
+            ],
+            [
+              -122.416608,
+              37.807246
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "08a10ab2bf15c4d14669b588062f7f08"
+    }
+  ],
+  "type": "FeatureCollection"
+}
