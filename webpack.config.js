@@ -26,19 +26,24 @@ module.exports = {
     devtool: NODE_ENV == "development" ? "source-map" : false,
 
     module: {
-        rules: [{
-            test: /\.js$/,
-            loader: "babel-loader?presets[]=es2015"
-        }, {
-            test: /\.css$/,
-            use: [
-                {
-                    loader: 'style-loader'
-                }, {
-                    loader: "css-loader"
-                }
-            ]
-        }]
+        rules: [
+            {
+                test: /\.js$/,
+                loader: "babel-loader?presets[]=es2015"
+            }, {
+                test: /\.css$/,
+                use: [
+                    {
+                        loader: 'style-loader'
+                    }, {
+                        loader: "css-loader"
+                    }
+                ]
+            }, {
+                test: /\.json$/,
+                use: 'json-loader'
+            }
+        ]
     }
 };
 
