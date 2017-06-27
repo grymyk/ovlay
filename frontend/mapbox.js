@@ -1,17 +1,14 @@
 'use strict';
 
 import './style.css';
-//import data from './wall.json';
 import data from './data.js';
-
-console.log( JSON.stringify(data.top) );
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiZ3J5bXlrIiwiYSI6ImNqM3JtZHl4MzAxZGkydm82eGZrNXdiNmoifQ.AJWTmNEt-6PVlX3HZyvpAg';
 
 let map = new mapboxgl.Map({
     style: 'mapbox://styles/mapbox/light-v9',
     center: [-122.416608, 37.807246],
-    zoom: 17,
+    zoom: 20,
     pitch: 40,
     bearing: 20,
     container: 'map'
@@ -28,27 +25,6 @@ map.addControl(new mapboxgl.ScaleControl({
 // the 'building' layer in the mapbox-streets vector source contains building-height
 // data from OpenStreetMap.
 map.on('load', () =>    {
-    /*map.addLayer({
-        'id': '3d-buildings',
-        'source': 'composite',
-        'source-layer': 'building',
-        'filter': ['==', 'extrude', 'true'],
-        'type': 'fill-extrusion',
-        'minzoom': 15,
-        'paint': {
-            'fill-extrusion-color': '#aaa',
-            'fill-extrusion-height': {
-                'type': 'identity',
-                'property': 'height'
-            },
-            'fill-extrusion-base': {
-                'type': 'identity',
-                'property': 'min_height'
-            },
-            'fill-extrusion-opacity': 0.6
-        }
-    });*/
-
     map.addLayer({
         'id': '3d-buildings',
         'source': 'composite',
@@ -66,7 +42,7 @@ map.on('load', () =>    {
                 'type': 'identity',
                 'property': 'min_height'
             },
-            'fill-extrusion-opacity': .6
+            'fill-extrusion-opacity': 0.6
         }
     });
 

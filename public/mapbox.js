@@ -79,16 +79,12 @@ var _data2 = _interopRequireDefault(_data);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-console.log(JSON.stringify(_data2.default.top));
-//import data from './wall.json';
-
-
 mapboxgl.accessToken = 'pk.eyJ1IjoiZ3J5bXlrIiwiYSI6ImNqM3JtZHl4MzAxZGkydm82eGZrNXdiNmoifQ.AJWTmNEt-6PVlX3HZyvpAg';
 
 var map = new mapboxgl.Map({
     style: 'mapbox://styles/mapbox/light-v9',
     center: [-122.416608, 37.807246],
-    zoom: 17,
+    zoom: 20,
     pitch: 40,
     bearing: 20,
     container: 'map'
@@ -105,27 +101,6 @@ map.addControl(new mapboxgl.ScaleControl({
 // the 'building' layer in the mapbox-streets vector source contains building-height
 // data from OpenStreetMap.
 map.on('load', function () {
-    /*map.addLayer({
-        'id': '3d-buildings',
-        'source': 'composite',
-        'source-layer': 'building',
-        'filter': ['==', 'extrude', 'true'],
-        'type': 'fill-extrusion',
-        'minzoom': 15,
-        'paint': {
-            'fill-extrusion-color': '#aaa',
-            'fill-extrusion-height': {
-                'type': 'identity',
-                'property': 'height'
-            },
-            'fill-extrusion-base': {
-                'type': 'identity',
-                'property': 'min_height'
-            },
-            'fill-extrusion-opacity': 0.6
-        }
-    });*/
-
     map.addLayer({
         'id': '3d-buildings',
         'source': 'composite',
@@ -143,7 +118,7 @@ map.on('load', function () {
                 'type': 'identity',
                 'property': 'min_height'
             },
-            'fill-extrusion-opacity': .6
+            'fill-extrusion-opacity': 0.6
         }
     });
 
@@ -781,10 +756,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var turf = __webpack_require__(8);
 
 
-var top = turf.polygon(_coords2.default.top);
-var botton = turf.polygon(_coords2.default.bottom);
-
-var features = [turf.polygon([_coords2.default.top.coords], _coords2.default.top.props), turf.polygon([_coords2.default.bottom.coords], _coords2.default.bottom.props)];
+var features = [turf.polygon([_coords2.default.top.coords], _coords2.default.top.props), turf.polygon([_coords2.default.bottom.coords], _coords2.default.bottom.props), turf.polygon([_coords2.default.left.coords], _coords2.default.left.props), turf.polygon([_coords2.default.right.coords], _coords2.default.right.props), turf.polygon([_coords2.default.front.coords], _coords2.default.front.props), turf.polygon([_coords2.default.back.coords], _coords2.default.back.props)];
 
 exports.default = turf.featureCollection(features);
 
@@ -798,6 +770,82 @@ exports.default = turf.featureCollection(features);
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+var basic = [
+// A
+[-122.416608, 37.807246],
+// B
+[-122.416844, 37.807220],
+// C
+[-122.416881, 37.807356],
+// D
+[-122.416645, 37.807386],
+// A
+[-122.416608, 37.807246]];
+
+// A.lat = D.lat +1
+// B.lat = C.lat +1
+
+var back = {
+    props: {
+        "level": 1,
+        "name": "back",
+        "height": 15,
+        "base_height": 0,
+        "color": "magento"
+    },
+
+    coords: [[-122.416645, 37.807387], [-122.416881, 37.807356], [-122.416881, 37.807356], [-122.416645, 37.807386], [-122.416645, 37.807387]]
+};
+
+// C.lat = B.lat +1
+// D.lat = A.lat +1
+
+var front = {
+    props: {
+        "level": 1,
+        "name": "front",
+        "height": 15,
+        "base_height": 0,
+        "color": "lime"
+    },
+
+    coords: [[-122.416608, 37.807246], [-122.416844, 37.807220], [-122.416844, 37.807221], [-122.416608, 37.807247], [-122.416608, 37.807246]]
+};
+
+// A.long = B.long -1
+// D.long = C.long -1
+
+var right = {
+    props: {
+        "level": 1,
+        "name": "right",
+        "height": 15,
+        "base_height": 0,
+        "color": "orange"
+    },
+
+    coords: [[-122.416843, 37.807220], [-122.416844, 37.807220], [-122.416881, 37.807356], [-122.416880, 37.807356], [-122.416843, 37.807220]]
+};
+
+// B.long = A.long -1
+// C.long = D.long -1
+
+var left = {
+    props: {
+        "level": 1,
+        "name": "left",
+        "height": 15,
+        "base_height": 0,
+        "color": "blue"
+    },
+
+    coords: [[-122.416608, 37.807246], [-122.416607, 37.807246], [-122.416644, 37.807386], [-122.416645, 37.807386], [-122.416608, 37.807246]]
+};
+
+/*let back = ;
+let front = ;
+let right = ;*/
+
 var top = {
     props: {
         "level": 1,
@@ -824,7 +872,11 @@ var bottom = {
 
 exports.default = {
     top: top,
-    bottom: bottom
+    bottom: bottom,
+    left: left,
+    right: right,
+    front: front,
+    back: back
 };
 
 /***/ }),
