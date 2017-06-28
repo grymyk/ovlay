@@ -747,16 +747,16 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _coords = __webpack_require__(7);
+var _facet = __webpack_require__(7);
 
-var _coords2 = _interopRequireDefault(_coords);
+var _facet2 = _interopRequireDefault(_facet);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var turf = __webpack_require__(8);
+var turf = __webpack_require__(9);
 
 
-var features = [turf.polygon([_coords2.default.top.coords], _coords2.default.top.props), turf.polygon([_coords2.default.bottom.coords], _coords2.default.bottom.props), turf.polygon([_coords2.default.left.coords], _coords2.default.left.props), turf.polygon([_coords2.default.right.coords], _coords2.default.right.props), turf.polygon([_coords2.default.front.coords], _coords2.default.front.props), turf.polygon([_coords2.default.back.coords], _coords2.default.back.props)];
+var features = [turf.polygon([_facet2.default.top.coords], _facet2.default.top.props), turf.polygon([_facet2.default.bottom.coords], _facet2.default.bottom.props), turf.polygon([_facet2.default.left.coords], _facet2.default.left.props), turf.polygon([_facet2.default.right.coords], _facet2.default.right.props), turf.polygon([_facet2.default.front.coords], _facet2.default.front.props), turf.polygon([_facet2.default.back.coords], _facet2.default.back.props)];
 
 exports.default = turf.featureCollection(features);
 
@@ -770,6 +770,22 @@ exports.default = turf.featureCollection(features);
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _factoryFacet = __webpack_require__(8);
+
+var _factoryFacet2 = _interopRequireDefault(_factoryFacet);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var facet = new _factoryFacet2.default({
+    lat: 0
+});
+
+console.log(facet);
+
+console.log(facet.back);
+console.log(facet.front);
+
 var basic = [
 // A
 [-122.416608, 37.807246],
@@ -881,6 +897,51 @@ exports.default = {
 
 /***/ }),
 /* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Facet = function () {
+    function Facet(opts) {
+        _classCallCheck(this, Facet);
+
+        this.lat = opts.lat;
+    }
+
+    _createClass(Facet, [{
+        key: 'back',
+        get: function get() {
+            console.log('Back Facet');
+
+            console.log(this);
+
+            return this.lat - 1;
+        }
+    }, {
+        key: 'front',
+        get: function get() {
+            console.log('Front Facet');
+
+            return this.lat + 1;
+        }
+    }]);
+
+    return Facet;
+}();
+
+exports.default = Facet;
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

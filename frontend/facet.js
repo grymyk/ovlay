@@ -1,5 +1,16 @@
 'use strict';
 
+import FacetCoords from './factoryFacet';
+
+let coords = new FacetCoords({
+    lat: 0
+});
+
+console.log(coords);
+
+console.log( coords.back );
+console.log( coords.front );
+
 let basic = [
     // A
     [
