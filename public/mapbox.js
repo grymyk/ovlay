@@ -1,4 +1,3 @@
-var mapboxgl =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -61,147 +60,11 @@ var mapboxgl =
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-__webpack_require__(1);
-
-var _data = __webpack_require__(6);
-
-var _data2 = _interopRequireDefault(_data);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-mapboxgl.accessToken = 'pk.eyJ1IjoiZ3J5bXlrIiwiYSI6ImNqM3JtZHl4MzAxZGkydm82eGZrNXdiNmoifQ.AJWTmNEt-6PVlX3HZyvpAg';
-
-var map = new mapboxgl.Map({
-    style: 'mapbox://styles/mapbox/light-v9',
-    center: [-122.416608, 37.807246],
-    zoom: 20,
-    pitch: 40,
-    bearing: 20,
-    container: 'map'
-});
-
-// Add zoom and rotation controls to the map.
-map.addControl(new mapboxgl.NavigationControl());
-
-map.addControl(new mapboxgl.ScaleControl({
-    maxWidth: 80,
-    unit: 'metric'
-}));
-
-// the 'building' layer in the mapbox-streets vector source contains building-height
-// data from OpenStreetMap.
-map.on('load', function () {
-    map.addLayer({
-        'id': '3d-buildings',
-        'source': 'composite',
-        'source-layer': 'building',
-        'filter': ['==', 'extrude', 'true'],
-        'type': 'fill-extrusion',
-        'minzoom': 15,
-        'paint': {
-            'fill-extrusion-color': '#aaa',
-            'fill-extrusion-height': {
-                'type': 'identity',
-                'property': 'height'
-            },
-            'fill-extrusion-base': {
-                'type': 'identity',
-                'property': 'min_height'
-            },
-            'fill-extrusion-opacity': 0.6
-        }
-    });
-
-    map.addLayer({
-        'id': 'room-extrusion',
-        'type': 'fill-extrusion',
-        'source': {
-            // Geojson Data source used in vector tiles, documented at
-            // https://gist.github.com/ryanbaumann/a7d970386ce59d11c16278b90dde094d
-            'type': 'geojson',
-            'data': _data2.default
-        },
-        'paint': {
-            // See the Mapbox Style Spec for details on property functions
-            // https://www.mapbox.com/mapbox-gl-style-spec/#types-function
-            'fill-extrusion-color': {
-                // Get the fill-extrusion-color from the source 'color' property.
-                'property': 'color',
-                'type': 'identity'
-            },
-            'fill-extrusion-height': {
-                // Get fill-extrusion-height from the source 'height' property.
-                'property': 'height',
-                'type': 'identity'
-            },
-            'fill-extrusion-base': {
-                // Get fill-extrusion-base from the source 'base_height' property.
-                'property': 'base_height',
-                'type': 'identity'
-            },
-            // Make extrusions slightly opaque for see through indoor walls.
-            'fill-extrusion-opacity': 0.5
-        }
-    });
-});
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(2);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
-var transform;
-
-var options = {}
-options.transform = transform
-// add the styles to the DOM
-var update = __webpack_require__(4)(content, options);
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../node_modules/css-loader/index.js!./style.css", function() {
-			var newContent = require("!!../node_modules/css-loader/index.js!./style.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(3)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, "body {\n    margin:0; padding:0;\n}\n\n#map {\n    position:absolute;\n    top:0;\n    bottom:0;\n    width:100%;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -283,7 +146,7 @@ function toComment(sourceMap) {
 }
 
 /***/ }),
-/* 4 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -329,7 +192,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(5);
+var	fixUrls = __webpack_require__(2);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -642,7 +505,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 5 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -737,6 +600,142 @@ module.exports = function (css) {
 };
 
 /***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+__webpack_require__(4);
+
+var _data = __webpack_require__(6);
+
+var _data2 = _interopRequireDefault(_data);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiZ3J5bXlrIiwiYSI6ImNqM3JtZHl4MzAxZGkydm82eGZrNXdiNmoifQ.AJWTmNEt-6PVlX3HZyvpAg';
+
+var map = new mapboxgl.Map({
+    style: 'mapbox://styles/mapbox/light-v9',
+    center: [-122.416608, 37.807246],
+    zoom: 20,
+    pitch: 40,
+    bearing: 20,
+    container: 'map'
+});
+
+// Add zoom and rotation controls to the map.
+map.addControl(new mapboxgl.NavigationControl());
+
+map.addControl(new mapboxgl.ScaleControl({
+    maxWidth: 80,
+    unit: 'metric'
+}));
+
+// the 'building' layer in the mapbox-streets vector source contains building-height
+// data from OpenStreetMap.
+map.on('load', function () {
+    map.addLayer({
+        'id': '3d-buildings',
+        'source': 'composite',
+        'source-layer': 'building',
+        'filter': ['==', 'extrude', 'true'],
+        'type': 'fill-extrusion',
+        'minzoom': 15,
+        'paint': {
+            'fill-extrusion-color': '#aaa',
+            'fill-extrusion-height': {
+                'type': 'identity',
+                'property': 'height'
+            },
+            'fill-extrusion-base': {
+                'type': 'identity',
+                'property': 'min_height'
+            },
+            'fill-extrusion-opacity': 0.6
+        }
+    });
+
+    map.addLayer({
+        'id': 'room-extrusion',
+        'type': 'fill-extrusion',
+        'source': {
+            // Geojson Data source used in vector tiles, documented at
+            // https://gist.github.com/ryanbaumann/a7d970386ce59d11c16278b90dde094d
+            'type': 'geojson',
+            'data': _data2.default
+        },
+        'paint': {
+            // See the Mapbox Style Spec for details on property functions
+            // https://www.mapbox.com/mapbox-gl-style-spec/#types-function
+            'fill-extrusion-color': {
+                // Get the fill-extrusion-color from the source 'color' property.
+                'property': 'color',
+                'type': 'identity'
+            },
+            'fill-extrusion-height': {
+                // Get fill-extrusion-height from the source 'height' property.
+                'property': 'height',
+                'type': 'identity'
+            },
+            'fill-extrusion-base': {
+                // Get fill-extrusion-base from the source 'base_height' property.
+                'property': 'base_height',
+                'type': 'identity'
+            },
+            // Make extrusions slightly opaque for see through indoor walls.
+            'fill-extrusion-opacity': 0.5
+        }
+    });
+});
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(5);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!./style.css", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!./style.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "body {\n    margin:0; padding:0;\n}\n\n#map {\n    position:absolute;\n    top:0;\n    bottom:0;\n    width:100%;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -753,7 +752,7 @@ var _facet2 = _interopRequireDefault(_facet);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var turf = __webpack_require__(9);
+var turf = __webpack_require__(8);
 
 
 var features = [turf.polygon([_facet2.default.top.coords], _facet2.default.top.props), turf.polygon([_facet2.default.bottom.coords], _facet2.default.bottom.props), turf.polygon([_facet2.default.left.coords], _facet2.default.left.props), turf.polygon([_facet2.default.right.coords], _facet2.default.right.props), turf.polygon([_facet2.default.front.coords], _facet2.default.front.props), turf.polygon([_facet2.default.back.coords], _facet2.default.back.props)];
@@ -767,25 +766,22 @@ exports.default = turf.featureCollection(features);
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
+/*
+import FacetCoords from './factoryFacet';
 
-var _factoryFacet = __webpack_require__(8);
-
-var _factoryFacet2 = _interopRequireDefault(_factoryFacet);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var facet = new _factoryFacet2.default({
+let coords = new FacetCoords({
     lat: 0
 });
 
-console.log(facet);
+console.log(coords);
 
-console.log(facet.back);
-console.log(facet.front);
+console.log( coords.back );
+console.log( coords.front );
+*/
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 var basic = [
 // A
 [-122.416608, 37.807246],
@@ -810,7 +806,7 @@ var back = {
         "color": "magento"
     },
 
-    coords: [[-122.416645, 37.807387], [-122.416881, 37.807356], [-122.416881, 37.807356], [-122.416645, 37.807386], [-122.416645, 37.807387]]
+    coords: [[-122.416645, 37.807387], [-122.416881, 37.807356], [-122.416881, 37.807356], [-122.416645, 37.807387], [-122.416645, 37.807387]]
 };
 
 // C.lat = B.lat +1
@@ -897,51 +893,6 @@ exports.default = {
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Facet = function () {
-    function Facet(opts) {
-        _classCallCheck(this, Facet);
-
-        this.lat = opts.lat;
-    }
-
-    _createClass(Facet, [{
-        key: 'back',
-        get: function get() {
-            console.log('Back Facet');
-
-            console.log(this);
-
-            return this.lat - 1;
-        }
-    }, {
-        key: 'front',
-        get: function get() {
-            console.log('Front Facet');
-
-            return this.lat + 1;
-        }
-    }]);
-
-    return Facet;
-}();
-
-exports.default = Facet;
-
-/***/ }),
-/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

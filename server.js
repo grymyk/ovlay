@@ -16,6 +16,12 @@ router.get('/', function (ctx, next) {
     ctx.body = indexHTML;
 });
 
+router.use('/bg.html', () => {
+    let bgHTML = fs.createReadStream('/public/bg.html', 'utf-8');
+
+    ctx.body = bgHTML;
+});
+
 app
     .use(router.routes())
     .use(router.allowedMethods());

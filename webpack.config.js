@@ -7,14 +7,14 @@ module.exports = {
     context: __dirname + '/frontend',
 
     entry: {
-        mapbox: "./mapbox"
+        mapbox: "./mapbox/mapbox",
+        bg: "./bg/bg"
     },
 
     output: {
         path: __dirname + '/public',
         publicPath: '/',
-        filename: "[name].js",
-        library: 'mapboxgl'
+        filename: "[name].js"
     },
 
     watch: NODE_ENV == "development",

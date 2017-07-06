@@ -1,5 +1,6 @@
 'use strict';
 
+/*
 import FacetCoords from './factoryFacet';
 
 let coords = new FacetCoords({
@@ -10,6 +11,7 @@ console.log(coords);
 
 console.log( coords.back );
 console.log( coords.front );
+*/
 
 let basic = [
     // A
@@ -66,7 +68,7 @@ let back = {
         ],
         [
             -122.416645,
-            37.807386
+            37.807387
         ],
         [
             -122.416645,
