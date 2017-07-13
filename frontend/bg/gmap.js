@@ -16,27 +16,44 @@ class GoogleMapAPI {
     initialize(dom, options){
         console.log('init');
 
+        let self = this;
+
         let map = new this.api.Map(dom, options);
+
+        setTimeout( () => {
+            console.log(map);
+        }, 1000);
 
         this.getMapUrl(map);
 
-        map.addListener('center_changed', function() {
-           console.log('center_changed');
+        map.addListener('center_changed', ()=> {
+            console.log('center_changed');
 
-           console.log(this);
-            //setTimeout( function() {
-                this.parseUrl(this.mapUrl);
-            //}, 300);
+            self.getMapUrl(map);
+        });
+
+        map.addListener('tilt_changed', () => {
+            console.log('tilt_changed');
+
+            self.getMapUrl(map);
+        });
+
+        map.addListener('zoom_changed', () => {
+            console.log('zoom_changed');
+
+            self.getMapUrl(map);
+        });
+
+
+        map.addListener('projection_changed', () => {
+            console.log('projection_changed');
+
+            self.getMapUrl(map);
         });
     }
 
     getMapUrl(map) {
-        console.log('getMapUrl');
-
         setTimeout( ()=> {
-            console.log(map);
-            console.log(map.mapUrl);
-
             this.parseUrl(map.mapUrl);
         }, 300);
     }

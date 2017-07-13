@@ -7,9 +7,13 @@ let gmapsApi = require('google-maps-api')(apiKey);
 let divMap = document.getElementById('app');
 let optionsMap = {
     center: {
-        lat: 37.7576171,
-        lng: -122.5776844},
-    zoom: 20
+        lat: 37.80145,
+        lng: -122.435366
+    },
+    zoom: 19,
+    mapTypeId: 'satellite',
+    heading: 90,
+    tilt: 45
 };
 
 gmapsApi().then(

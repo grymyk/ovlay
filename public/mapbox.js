@@ -60,11 +60,13 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */
+/* 0 */,
+/* 1 */,
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -146,7 +148,7 @@ function toComment(sourceMap) {
 }
 
 /***/ }),
-/* 1 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -192,7 +194,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(2);
+var	fixUrls = __webpack_require__(4);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -505,7 +507,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 2 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -600,15 +602,16 @@ module.exports = function (css) {
 };
 
 /***/ }),
-/* 3 */
+/* 5 */,
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-__webpack_require__(4);
+__webpack_require__(7);
 
-var _data = __webpack_require__(6);
+var _data = __webpack_require__(9);
 
 var _data2 = _interopRequireDefault(_data);
 
@@ -691,13 +694,13 @@ map.on('load', function () {
 });
 
 /***/ }),
-/* 4 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(5);
+var content = __webpack_require__(8);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -705,7 +708,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(1)(content, options);
+var update = __webpack_require__(3)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -722,10 +725,10 @@ if(false) {
 }
 
 /***/ }),
-/* 5 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(0)(undefined);
+exports = module.exports = __webpack_require__(2)(undefined);
 // imports
 
 
@@ -736,7 +739,7 @@ exports.push([module.i, "body {\n    margin:0; padding:0;\n}\n\n#map {\n    posi
 
 
 /***/ }),
-/* 6 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -746,13 +749,13 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _facet = __webpack_require__(7);
+var _facet = __webpack_require__(10);
 
 var _facet2 = _interopRequireDefault(_facet);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var turf = __webpack_require__(8);
+var turf = __webpack_require__(11);
 
 
 var features = [turf.polygon([_facet2.default.top.coords], _facet2.default.top.props), turf.polygon([_facet2.default.bottom.coords], _facet2.default.bottom.props), turf.polygon([_facet2.default.left.coords], _facet2.default.left.props), turf.polygon([_facet2.default.right.coords], _facet2.default.right.props), turf.polygon([_facet2.default.front.coords], _facet2.default.front.props), turf.polygon([_facet2.default.back.coords], _facet2.default.back.props)];
@@ -760,7 +763,7 @@ var features = [turf.polygon([_facet2.default.top.coords], _facet2.default.top.p
 exports.default = turf.featureCollection(features);
 
 /***/ }),
-/* 7 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -892,7 +895,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 8 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
