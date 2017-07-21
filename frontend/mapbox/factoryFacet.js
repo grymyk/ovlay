@@ -1,38 +1,62 @@
 'use strict';
 
-class FacetCoords {
-    constructor(opts) {
-        this.lat = opts.lat;
-        this.long = opts.long;
+class Facet {
+    constructor(options) {
+        const FIRST = 0;
+
+        this.coords = options.coords;
+        this.setOneCoord(options.coords[FIRST]);
+
+        this.props = {};
+        this.setProps(options);
+    }
+
+    setProps(options) {
+        this.props.color = options.color;
+        this.props.level = +options.level;
+        this.props.height = options.height * options.level;
+        this.props.base_height = this.props.height;
+    }
+
+    setOneCoord(coord) {
+        this.coords.push(coord);
+    }
+
+    getCoords() {
+        return this.coords;
+    }
+
+    getProps() {
+        return this.props;
     }
 
     get back() {
-        console.log('Back FacetCoords');
+        console.log('Back Facet');
 
         return this.lat -1
     }
 
     get front() {
-        console.log('Front FacetCoords');
+        console.log('Front Facet');
 
         return this.lat +1;
     }
 
     get left() {
-        console.log('Left FacetCoords');
+        console.log('Left Facet');
     }
 
     get right() {
-        console.log('Right FacetCoords')
+        console.log('Right Facet')
     }
 
     get top() {
-        console.log('Top FacetCoords');
+        console.log('Top Facet');
     }
 
-    get Bottom() {
-        console.log('Bottom FacetCoords')
+    get bottom() {
+        console.log('Bottom Facet')
     }
 }
 
-export default FacetCoords;
+export default Facet;

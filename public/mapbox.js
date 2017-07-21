@@ -617,12 +617,14 @@ var _data2 = _interopRequireDefault(_data);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//console.log('data', data);
+
 mapboxgl.accessToken = 'pk.eyJ1IjoiZ3J5bXlrIiwiYSI6ImNqM3JtZHl4MzAxZGkydm82eGZrNXdiNmoifQ.AJWTmNEt-6PVlX3HZyvpAg';
 
 var map = new mapboxgl.Map({
     style: 'mapbox://styles/mapbox/light-v9',
     center: [-122.416608, 37.807246],
-    zoom: 20,
+    zoom: 19,
     pitch: 40,
     bearing: 20,
     container: 'map'
@@ -749,18 +751,74 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _facet = __webpack_require__(10);
+var _factoryFacet = __webpack_require__(10);
 
-var _facet2 = _interopRequireDefault(_facet);
+var _factoryFacet2 = _interopRequireDefault(_factoryFacet);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var turf = __webpack_require__(11);
+// import facet from './facet.js';
 
 
-var features = [turf.polygon([_facet2.default.top.coords], _facet2.default.top.props), turf.polygon([_facet2.default.bottom.coords], _facet2.default.bottom.props), turf.polygon([_facet2.default.left.coords], _facet2.default.left.props), turf.polygon([_facet2.default.right.coords], _facet2.default.right.props), turf.polygon([_facet2.default.front.coords], _facet2.default.front.props), turf.polygon([_facet2.default.back.coords], _facet2.default.back.props)];
+var building = [];
+var numberLevel = 20;
+var heightLevel = 3;
+var coords = [[-122.416608, 37.807246], [-122.416844, 37.807220], [-122.416881, 37.807356], [-122.416645, 37.807386]];
 
-exports.default = turf.featureCollection(features);
+for (var level = 1, BITE = 256; level <= numberLevel; level += 1) {
+    //console.log('level: ', level);
+
+    var blue = BITE / level;
+    var red = Math.floor(255 - 42.5 * level);
+    var color = "rgb(" + red + ", 255, " + blue + ")";
+    console.log('color: ', color);
+
+    var facet = new _factoryFacet2.default({
+        height: heightLevel,
+        coords: coords,
+        level: level,
+        color: color
+    });
+
+    //console.log(facet);
+    //console.log( facet.getCoords() );
+    //console.log( facet.getProps() );
+
+    var floor = turf.polygon([facet.getCoords()], facet.getProps());
+
+    building.push(floor);
+
+    facet = null;
+    floor = null;
+}
+
+//console.log('building', building);
+
+var bottom = {
+    props: {
+        level: 1,
+        name: "bottom",
+        height: 0,
+        base_height: 0,
+        color: "red"
+    },
+
+    coords: [[-122.416608, 37.807246], [-122.416844, 37.807220], [-122.416881, 37.807356], [-122.416645, 37.807386], [-122.416608, 37.807246]]
+};
+
+var features = [
+//turf.polygon([facet.top.coords], facet.top.props),
+turf.polygon([bottom.coords], bottom.props)
+//turf.polygon([facet.bottom.coords], facet.bottom.props),
+//turf.polygon([facet.left.coords], facet.left.props),
+//turf.polygon([facet.right.coords], facet.right.props),
+//turf.polygon([facet.front.coords], facet.front.props),
+//turf.polygon([facet.back.coords], facet.back.props)
+];
+
+//export default turf.featureCollection(features);
+exports.default = turf.featureCollection(building);
 
 /***/ }),
 /* 10 */
@@ -769,130 +827,90 @@ exports.default = turf.featureCollection(features);
 "use strict";
 
 
-/*
-import FacetCoords from './factoryFacet';
-
-let coords = new FacetCoords({
-    lat: 0
-});
-
-console.log(coords);
-
-console.log( coords.back );
-console.log( coords.front );
-*/
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-var basic = [
-// A
-[-122.416608, 37.807246],
-// B
-[-122.416844, 37.807220],
-// C
-[-122.416881, 37.807356],
-// D
-[-122.416645, 37.807386],
-// A
-[-122.416608, 37.807246]];
 
-// A.lat = D.lat +1
-// B.lat = C.lat +1
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var back = {
-    props: {
-        "level": 1,
-        "name": "back",
-        "height": 15,
-        "base_height": 0,
-        "color": "magento"
-    },
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    coords: [[-122.416645, 37.807387], [-122.416881, 37.807356], [-122.416881, 37.807356], [-122.416645, 37.807387], [-122.416645, 37.807387]]
-};
+var Facet = function () {
+    function Facet(options) {
+        _classCallCheck(this, Facet);
 
-// C.lat = B.lat +1
-// D.lat = A.lat +1
+        var FIRST = 0;
 
-var front = {
-    props: {
-        "level": 1,
-        "name": "front",
-        "height": 15,
-        "base_height": 0,
-        "color": "lime"
-    },
+        this.coords = options.coords;
+        this.setOneCoord(options.coords[FIRST]);
 
-    coords: [[-122.416608, 37.807246], [-122.416844, 37.807220], [-122.416844, 37.807221], [-122.416608, 37.807247], [-122.416608, 37.807246]]
-};
+        this.props = {};
+        this.setProps(options);
+    }
 
-// A.long = B.long -1
-// D.long = C.long -1
+    _createClass(Facet, [{
+        key: 'setProps',
+        value: function setProps(options) {
+            this.props.color = options.color;
+            this.props.level = +options.level;
+            this.props.height = options.height * options.level;
+            this.props.base_height = this.props.height;
+        }
+    }, {
+        key: 'setOneCoord',
+        value: function setOneCoord(coord) {
+            this.coords.push(coord);
+        }
+    }, {
+        key: 'getCoords',
+        value: function getCoords() {
+            return this.coords;
+        }
+    }, {
+        key: 'getProps',
+        value: function getProps() {
+            return this.props;
+        }
+    }, {
+        key: 'back',
+        get: function get() {
+            console.log('Back Facet');
 
-var right = {
-    props: {
-        "level": 1,
-        "name": "right",
-        "height": 15,
-        "base_height": 0,
-        "color": "orange"
-    },
+            return this.lat - 1;
+        }
+    }, {
+        key: 'front',
+        get: function get() {
+            console.log('Front Facet');
 
-    coords: [[-122.416843, 37.807220], [-122.416844, 37.807220], [-122.416881, 37.807356], [-122.416880, 37.807356], [-122.416843, 37.807220]]
-};
+            return this.lat + 1;
+        }
+    }, {
+        key: 'left',
+        get: function get() {
+            console.log('Left Facet');
+        }
+    }, {
+        key: 'right',
+        get: function get() {
+            console.log('Right Facet');
+        }
+    }, {
+        key: 'top',
+        get: function get() {
+            console.log('Top Facet');
+        }
+    }, {
+        key: 'bottom',
+        get: function get() {
+            console.log('Bottom Facet');
+        }
+    }]);
 
-// B.long = A.long -1
-// C.long = D.long -1
+    return Facet;
+}();
 
-var left = {
-    props: {
-        "level": 1,
-        "name": "left",
-        "height": 15,
-        "base_height": 0,
-        "color": "blue"
-    },
-
-    coords: [[-122.416608, 37.807246], [-122.416607, 37.807246], [-122.416644, 37.807386], [-122.416645, 37.807386], [-122.416608, 37.807246]]
-};
-
-/*let back = ;
-let front = ;
-let right = ;*/
-
-var top = {
-    props: {
-        "level": 1,
-        "name": "top",
-        "height": 15,
-        "base_height": 15,
-        "color": "salmon"
-    },
-
-    coords: [[-122.416608, 37.807246], [-122.416844, 37.807220], [-122.416881, 37.807356], [-122.416645, 37.807386], [-122.416608, 37.807246]]
-};
-
-var bottom = {
-    props: {
-        "level": 1,
-        "name": "bottom",
-        "height": 0,
-        "base_height": 0,
-        "color": "red"
-    },
-
-    coords: [[-122.416608, 37.807246], [-122.416844, 37.807220], [-122.416881, 37.807356], [-122.416645, 37.807386], [-122.416608, 37.807246]]
-};
-
-exports.default = {
-    top: top,
-    bottom: bottom,
-    left: left,
-    right: right,
-    front: front,
-    back: back
-};
+exports.default = Facet;
 
 /***/ }),
 /* 11 */

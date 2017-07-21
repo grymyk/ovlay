@@ -3,7 +3,6 @@
 import './bg.css';
 const querystring = require('querystring');
 
-
 class GoogleMapAPI {
     constructor(api, dom, options) {
         console.log('constructor');

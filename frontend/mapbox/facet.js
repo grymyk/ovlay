@@ -1,17 +1,39 @@
 'use strict';
 
-/*
-import FacetCoords from './factoryFacet';
+import Facet from './factoryFacet';
 
-let coords = new FacetCoords({
-    lat: 0
-});
+let config = {
+    floor: 10,
+    level_height: 3,
+    color: "salmon",
 
-console.log(coords);
+    coords: [
+        [
+            -122.416608,
+            37.807246
+        ],
+        [
+            -122.416844,
+            37.807220
+        ],
+        [
+            -122.416881,
+            37.807356
+        ],
+        [
+            -122.416645,
+            37.807386
+        ]
+    ]
+};
 
-console.log( coords.back );
-console.log( coords.front );
-*/
+let top = new Facet(config);
+
+//console.log('coords: ', top.getCoords);
+//console.log('props: ', top.getProps);
+
+//console.log( coords.bottom );
+//console.log( coords.top );
 
 let basic = [
     // A
@@ -104,7 +126,7 @@ let front = {
         ],
         [
             -122.416608,
-            37.807247
+            37.807246
         ],
         [
             -122.416608,
@@ -188,39 +210,6 @@ let left = {
 /*let back = ;
 let front = ;
 let right = ;*/
-
-let top = {
-    props: {
-        "level": 1,
-        "name": "top",
-        "height": 15,
-        "base_height": 15,
-        "color": "salmon"
-    },
-
-    coords: [
-        [
-            -122.416608,
-            37.807246
-        ],
-        [
-            -122.416844,
-            37.807220
-        ],
-        [
-            -122.416881,
-            37.807356
-        ],
-        [
-            -122.416645,
-            37.807386
-        ],
-        [
-            -122.416608,
-            37.807246
-        ]
-    ]
-};
 
 let bottom = {
     props: {
