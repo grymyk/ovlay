@@ -5,6 +5,7 @@ const turf = require('@turf/helpers');
 import Facet from './factoryFacet';
 
 let building = [];
+
 let numberLevel = 20;
 let heightLevel = 3;
 let coords = [
@@ -26,19 +27,61 @@ let coords = [
     ]
 ];
 
-for (let level = 1, BITE = 256; level <= numberLevel; level += 1) {
-    //console.log('level: ', level);
-
+function getColor(level) {
+    const BITE = 256;
     let blue = BITE / level;
     let red = Math.floor(255 - 42.5 * level);
+
     let color = "rgb(" + red + ", 255, " + blue + ")";
-    console.log('color: ', color);
+    //console.log('color: ', color);
+
+    return color;
+}
+
+function getLatitude(level, heightLevel) {
+
+}
+
+function getLongitude(level, heightLevel) {
+
+}
+
+function getAltitude(level, heightLevel) {
+    return level * heightLevel;
+}
+
+function get3DCoors(basic, numberLevel = 3, heightLevel = 3) {
+    let floor3D = [];
+    let temp = [];
+
+    for (let level = 0; level < numberLevel; level += 1) {
+
+        for (let point = 0, len = basic.length; point < len; point += 1) {
+            temp[point] = basic[point];
+            //temp[point][0] = getLatitude(level, heightLevel);
+            //temp[point][1] = getLongitude(level, heightLevel);
+            temp[point][2] = getAltitude(level, heightLevel);
+
+            //console.log(basic[point]);
+        }
+        //console.log('----');
+
+        floor3D.push(temp);
+    }
+
+    //console.log(floor3D);
+}
+
+get3DCoors(coords);
+
+for (let level = 1; level <= numberLevel; level += 1) {
+    //console.log('level: ', level);
 
     let facet = new Facet({
         height: heightLevel,
         coords,
         level,
-        color
+        color: getColor(level)
     });
 
     //console.log(facet);

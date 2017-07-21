@@ -762,23 +762,65 @@ var turf = __webpack_require__(11);
 
 
 var building = [];
+
 var numberLevel = 20;
 var heightLevel = 3;
 var coords = [[-122.416608, 37.807246], [-122.416844, 37.807220], [-122.416881, 37.807356], [-122.416645, 37.807386]];
 
-for (var level = 1, BITE = 256; level <= numberLevel; level += 1) {
-    //console.log('level: ', level);
-
+function getColor(level) {
+    var BITE = 256;
     var blue = BITE / level;
     var red = Math.floor(255 - 42.5 * level);
+
     var color = "rgb(" + red + ", 255, " + blue + ")";
-    console.log('color: ', color);
+    //console.log('color: ', color);
+
+    return color;
+}
+
+function getLatitude(level, heightLevel) {}
+
+function getLongitude(level, heightLevel) {}
+
+function getAltitude(level, heightLevel) {
+    return level * heightLevel;
+}
+
+function get3DCoors(basic) {
+    var numberLevel = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 3;
+    var heightLevel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3;
+
+    var floor3D = [];
+    var temp = [];
+
+    for (var level = 0; level < numberLevel; level += 1) {
+
+        for (var point = 0, len = basic.length; point < len; point += 1) {
+            temp[point] = basic[point];
+            //temp[point][0] = getLatitude(level, heightLevel);
+            //temp[point][1] = getLongitude(level, heightLevel);
+            temp[point][2] = getAltitude(level, heightLevel);
+
+            //console.log(basic[point]);
+        }
+        //console.log('----');
+
+        floor3D.push(temp);
+    }
+
+    //console.log(floor3D);
+}
+
+get3DCoors(coords);
+
+for (var level = 1; level <= numberLevel; level += 1) {
+    //console.log('level: ', level);
 
     var facet = new _factoryFacet2.default({
         height: heightLevel,
         coords: coords,
         level: level,
-        color: color
+        color: getColor(level)
     });
 
     //console.log(facet);
