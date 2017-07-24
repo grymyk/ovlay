@@ -27,13 +27,17 @@ let coords = [
     ]
 ];
 
-function getColor(level) {
+function getColor(level, numberLevel) {
     const BITE = 256;
-    let blue = BITE / level;
-    let red = Math.floor(255 - 42.5 * level);
 
-    let color = "rgb(" + red + ", 255, " + blue + ")";
-    //console.log('color: ', color);
+    const red = 60;
+    let green = 64;
+    const blue = 181;
+
+    green = Math.floor(( BITE - green) / numberLevel) * level;
+
+    let color = "rgb(" + red + ", " + green + ", " + blue + ")";
+    console.log('color: ', color);
 
     return color;
 }
@@ -81,7 +85,7 @@ for (let level = 1; level <= numberLevel; level += 1) {
         height: heightLevel,
         coords,
         level,
-        color: getColor(level)
+        color: getColor(level, numberLevel)
     });
 
     //console.log(facet);

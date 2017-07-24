@@ -35,6 +35,7 @@ map.on('load', () =>    {
         'type': 'fill-extrusion',
         'minzoom': 15,
         'paint': {
+            'fill-extrusion-opacity': 0.6,
             'fill-extrusion-color': '#aaa',
             'fill-extrusion-height': {
                 'type': 'identity',
@@ -43,8 +44,7 @@ map.on('load', () =>    {
             'fill-extrusion-base': {
                 'type': 'identity',
                 'property': 'min_height'
-            },
-            'fill-extrusion-opacity': 0.6
+            }
         }
     });
 
@@ -60,6 +60,9 @@ map.on('load', () =>    {
         'paint': {
             // See the Mapbox Style Spec for details on property functions
             // https://www.mapbox.com/mapbox-gl-style-spec/#types-function
+
+            // Make extrusions slightly opaque for see through indoor walls.
+            'fill-extrusion-opacity': 1,
             'fill-extrusion-color': {
                 // Get the fill-extrusion-color from the source 'color' property.
                 'property': 'color',
@@ -74,9 +77,7 @@ map.on('load', () =>    {
                 // Get fill-extrusion-base from the source 'base_height' property.
                 'property': 'base_height',
                 'type': 'identity'
-            },
-            // Make extrusions slightly opaque for see through indoor walls.
-            'fill-extrusion-opacity': 0.5
+            }
         }
     });
 });

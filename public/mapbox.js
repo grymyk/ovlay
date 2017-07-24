@@ -649,6 +649,7 @@ map.on('load', function () {
         'type': 'fill-extrusion',
         'minzoom': 15,
         'paint': {
+            'fill-extrusion-opacity': 0.6,
             'fill-extrusion-color': '#aaa',
             'fill-extrusion-height': {
                 'type': 'identity',
@@ -657,8 +658,7 @@ map.on('load', function () {
             'fill-extrusion-base': {
                 'type': 'identity',
                 'property': 'min_height'
-            },
-            'fill-extrusion-opacity': 0.6
+            }
         }
     });
 
@@ -674,6 +674,9 @@ map.on('load', function () {
         'paint': {
             // See the Mapbox Style Spec for details on property functions
             // https://www.mapbox.com/mapbox-gl-style-spec/#types-function
+
+            // Make extrusions slightly opaque for see through indoor walls.
+            'fill-extrusion-opacity': 1,
             'fill-extrusion-color': {
                 // Get the fill-extrusion-color from the source 'color' property.
                 'property': 'color',
@@ -688,9 +691,7 @@ map.on('load', function () {
                 // Get fill-extrusion-base from the source 'base_height' property.
                 'property': 'base_height',
                 'type': 'identity'
-            },
-            // Make extrusions slightly opaque for see through indoor walls.
-            'fill-extrusion-opacity': 0.5
+            }
         }
     });
 });
@@ -767,13 +768,17 @@ var numberLevel = 20;
 var heightLevel = 3;
 var coords = [[-122.416608, 37.807246], [-122.416844, 37.807220], [-122.416881, 37.807356], [-122.416645, 37.807386]];
 
-function getColor(level) {
+function getColor(level, numberLevel) {
     var BITE = 256;
-    var blue = BITE / level;
-    var red = Math.floor(255 - 42.5 * level);
 
-    var color = "rgb(" + red + ", 255, " + blue + ")";
-    //console.log('color: ', color);
+    var red = 60;
+    var green = 64;
+    var blue = 181;
+
+    green = Math.floor((BITE - green) / numberLevel) * level;
+
+    var color = "rgb(" + red + ", " + green + ", " + blue + ")";
+    console.log('color: ', color);
 
     return color;
 }
@@ -820,7 +825,7 @@ for (var level = 1; level <= numberLevel; level += 1) {
         height: heightLevel,
         coords: coords,
         level: level,
-        color: getColor(level)
+        color: getColor(level, numberLevel)
     });
 
     //console.log(facet);
