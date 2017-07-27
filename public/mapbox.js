@@ -756,17 +756,23 @@ var _factoryFacet = __webpack_require__(10);
 
 var _factoryFacet2 = _interopRequireDefault(_factoryFacet);
 
+var _config = __webpack_require__(11);
+
+var _config2 = _interopRequireDefault(_config);
+
+var _geoPolygon = __webpack_require__(12);
+
+var _geoPolygon2 = _interopRequireDefault(_geoPolygon);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var turf = __webpack_require__(11);
+var turf = __webpack_require__(13);
 // import facet from './facet.js';
 
 
 var building = [];
 
-var numberLevel = 20;
-var heightLevel = 3;
-var coords = [[-122.416608, 37.807246], [-122.416844, 37.807220], [-122.416881, 37.807356], [-122.416645, 37.807386]];
+//console.log( get3DCoors(config) );
 
 function getColor(level, numberLevel) {
     var BITE = 256;
@@ -778,54 +784,19 @@ function getColor(level, numberLevel) {
     green = Math.floor((BITE - green) / numberLevel) * level;
 
     var color = "rgb(" + red + ", " + green + ", " + blue + ")";
-    console.log('color: ', color);
+    //console.log('color: ', color);
 
     return color;
 }
 
-function getLatitude(level, heightLevel) {}
-
-function getLongitude(level, heightLevel) {}
-
-function getAltitude(level, heightLevel) {
-    return level * heightLevel;
-}
-
-function get3DCoors(basic) {
-    var numberLevel = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 3;
-    var heightLevel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3;
-
-    var floor3D = [];
-    var temp = [];
-
-    for (var level = 0; level < numberLevel; level += 1) {
-
-        for (var point = 0, len = basic.length; point < len; point += 1) {
-            temp[point] = basic[point];
-            //temp[point][0] = getLatitude(level, heightLevel);
-            //temp[point][1] = getLongitude(level, heightLevel);
-            temp[point][2] = getAltitude(level, heightLevel);
-
-            //console.log(basic[point]);
-        }
-        //console.log('----');
-
-        floor3D.push(temp);
-    }
-
-    //console.log(floor3D);
-}
-
-get3DCoors(coords);
-
-for (var level = 1; level <= numberLevel; level += 1) {
+for (var level = 1, number = _config2.default.numberLevel; level <= number; level += 1) {
     //console.log('level: ', level);
 
     var facet = new _factoryFacet2.default({
-        height: heightLevel,
-        coords: coords,
+        height: _config2.default.heightLevel,
+        coords: _config2.default.coords,
         level: level,
-        color: getColor(level, numberLevel)
+        color: getColor(level, number)
     });
 
     //console.log(facet);
@@ -961,6 +932,82 @@ exports.default = Facet;
 
 /***/ }),
 /* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var config = {
+    numberLevel: 5,
+    heightLevel: 3,
+    coords: [[-122.416608, 37.807246], [-122.416844, 37.807220], [-122.416881, 37.807356], [-122.416645, 37.807386]]
+};
+
+exports.default = config;
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+function getLatitude(level, heightLevel) {
+    console.log('getLatitude');
+}
+
+function getLongitude(level, heightLevel) {
+    console.log('getLongitude');
+}
+
+function getAltitude(level, heightLevel) {
+    console.log('getAltitude');
+
+    return level * heightLevel;
+}
+
+function getColor() {
+    console.log('getColor');
+}
+
+function get3DCoors(options) {
+    var basic = options.coords;
+    var numberLevel = options.numberLevel;
+    var heightLevel = options.heightLevel;
+
+    var floor3D = [];
+    var temp = [];
+
+    for (var level = 0; level < numberLevel; level += 1) {
+
+        for (var point = 0, len = basic.length; point < len; point += 1) {
+            temp[point] = basic[point];
+            //temp[point][0] = getLatitude(level, heightLevel);
+            //temp[point][1] = getLongitude(level, heightLevel);
+            temp[point][2] = getAltitude(level, heightLevel);
+
+            //console.log(basic[point]);
+        }
+        //console.log('----');
+
+        floor3D.push(temp);
+    }
+
+    //console.log('3D points:', floor3D);
+
+    return floor3D;
+}
+
+exports.default = get3DCoors;
+
+/***/ }),
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
