@@ -1,7 +1,7 @@
 'use strict';
 
 let config = {
-    numberLevel: 5,
+    numberLevel: 20,
     heightLevel: 3,
     coords: [
         [
