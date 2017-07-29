@@ -12,19 +12,24 @@ let building = [];
 
 //console.log( get3DCoors(config) );
 
-function getColor(level, numberLevel) {
+function getHSL(level, numberLevel) {
+    const HUE_RANGE = 360;
+
+    let hue = (HUE_RANGE / numberLevel) * level;
+    let saturations = '50%';
+    let lightness = '50%';
+
+    return "hsl(" + hue + ", " + saturations + ", " + lightness + ")";
+}
+
+function getRGB(level, numberLevel) {
     const BITE = 256;
 
-    const red = 60;
-    let green = 64;
-    const blue = 181;
+    let red = 60;
+    let green = Math.floor(( BITE - green) / numberLevel) * level;
+    let blue = 181;
 
-    green = Math.floor(( BITE - green) / numberLevel) * level;
-
-    let color = "rgb(" + red + ", " + green + ", " + blue + ")";
-    //console.log('color: ', color);
-
-    return color;
+    return "rgb(" + red + ", " + green + ", " + blue + ")";
 }
 
 for (let level = 1, number = config.numberLevel; level <= number; level += 1) {
@@ -34,7 +39,7 @@ for (let level = 1, number = config.numberLevel; level <= number; level += 1) {
         height: config.heightLevel,
         coords: config.coords,
         level,
-        color: getColor(level, number)
+        color: getHSL(level, number)
     });
 
     //console.log(facet);

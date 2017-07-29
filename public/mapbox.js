@@ -774,19 +774,24 @@ var building = [];
 
 //console.log( get3DCoors(config) );
 
-function getColor(level, numberLevel) {
+function getHSL(level, numberLevel) {
+    var HUE_RANGE = 360;
+
+    var hue = HUE_RANGE / numberLevel * level;
+    var saturations = '50%';
+    var lightness = '50%';
+
+    return "hsl(" + hue + ", " + saturations + ", " + lightness + ")";
+}
+
+function getRGB(level, numberLevel) {
     var BITE = 256;
 
     var red = 60;
-    var green = 64;
+    var green = Math.floor((BITE - green) / numberLevel) * level;
     var blue = 181;
 
-    green = Math.floor((BITE - green) / numberLevel) * level;
-
-    var color = "rgb(" + red + ", " + green + ", " + blue + ")";
-    //console.log('color: ', color);
-
-    return color;
+    return "rgb(" + red + ", " + green + ", " + blue + ")";
 }
 
 for (var level = 1, number = _config2.default.numberLevel; level <= number; level += 1) {
@@ -796,7 +801,7 @@ for (var level = 1, number = _config2.default.numberLevel; level <= number; leve
         height: _config2.default.heightLevel,
         coords: _config2.default.coords,
         level: level,
-        color: getColor(level, number)
+        color: getHSL(level, number)
     });
 
     //console.log(facet);
