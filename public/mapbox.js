@@ -623,9 +623,9 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiZ3J5bXlrIiwiYSI6ImNqM3JtZHl4MzAxZGkydm82eGZrN
 
 var map = new mapboxgl.Map({
     style: 'mapbox://styles/mapbox/light-v9',
-    center: [-122.416608, 37.807246],
-    zoom: 18,
-    pitch: 40,
+    center: [-122.418608, 37.807246],
+    zoom: 17,
+    pitch: 70,
     bearing: 20,
     container: 'map'
 });
@@ -794,12 +794,65 @@ function getRGB(level, numberLevel) {
     return "rgb(" + red + ", " + green + ", " + blue + ")";
 }
 
+function powerDelta(x) {
+    var base = Math.E;
+    var exponent = x;
+
+    return Math.pow(base, exponent);
+}
+
+function sineDelta(level, period) {
+    var numberPeriod = 4;
+    var frequency = 2 * Math.PI / period;
+
+    var alpha = frequency * numberPeriod * level;
+    var amplitude = Math.pow(10, -5) * 2;
+
+    return amplitude * Math.sin(alpha);
+}
+
+function linearDelta(x) {
+    //console.log(x);
+
+    var delta = 0.00001;
+    //const K = 2;
+    var B = 0;
+
+    return delta * x + B;
+}
+
+function getCoords(coords, level, number) {
+    /*[
+        -122.416608,
+        37.807246
+    ]*/
+
+    var delta = 0.000055;
+    var shiftedCoords = [];
+
+    for (var p = 0, len = coords.length, shiftedPoints = []; p < 4; p += 1) {
+        //shiftedPoints[0] = coords[p][0] + delta;
+        // shiftedPoints[0] = coords[p][0] + linearDelta(level);
+        //shiftedPoints[0] = coords[p][0] + powerDelta(level);
+        shiftedPoints[0] = coords[p][0] + sineDelta(level, number);
+        shiftedPoints[1] = coords[p][1];
+
+        shiftedCoords.push(shiftedPoints);
+
+        shiftedPoints = [];
+    }
+
+    //console.log(shiftedCoords);
+
+    return shiftedCoords;
+}
+
 for (var level = 1, number = _config2.default.numberLevel; level <= number; level += 1) {
     //console.log('level: ', level);
 
     var facet = new _factoryFacet2.default({
         height: _config2.default.heightLevel,
-        coords: _config2.default.coords,
+        coords: getCoords(_config2.default.coords, level, number),
         level: level,
         color: getHSL(level, number)
     });
@@ -865,6 +918,9 @@ var Facet = function () {
         var FIRST = 0;
 
         this.coords = options.coords;
+
+        //console.log(typeof options.coords[FIRST][FIRST]);
+
         this.setOneCoord(options.coords[FIRST]);
 
         this.props = {};
@@ -946,7 +1002,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var config = {
-    numberLevel: 20,
+    numberLevel: 50,
     heightLevel: 3,
     coords: [[-122.416608, 37.807246], [-122.416844, 37.807220], [-122.416881, 37.807356], [-122.416645, 37.807386]]
 };

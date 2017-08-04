@@ -5,6 +5,9 @@ class Facet {
         const FIRST = 0;
 
         this.coords = options.coords;
+
+        //console.log(typeof options.coords[FIRST][FIRST]);
+
         this.setOneCoord(options.coords[FIRST]);
 
         this.props = {};

@@ -32,12 +32,65 @@ function getRGB(level, numberLevel) {
     return "rgb(" + red + ", " + green + ", " + blue + ")";
 }
 
+function powerDelta(x) {
+    let base = Math.E;
+    let exponent = x;
+
+    return Math.pow(base, exponent);
+}
+
+function sineDelta(level, period) {
+    let numberPeriod = 4;
+    let frequency = 2 * Math.PI / period;
+
+    let alpha = frequency * numberPeriod * level;
+    let amplitude = Math.pow(10, -5) * 2;
+
+    return amplitude * Math.sin(alpha);
+}
+
+function linearDelta(x) {
+    //console.log(x);
+
+    let delta = 0.00001;
+    //const K = 2;
+    const B = 0;
+
+    return delta * x + B;
+}
+
+function getCoords(coords, level, number) {
+    /*[
+        -122.416608,
+        37.807246
+    ]*/
+
+    let delta = 0.000055;
+    let shiftedCoords = [];
+
+    for (let p = 0, len = coords.length, shiftedPoints = []; p < 4; p += 1 ) {
+        //shiftedPoints[0] = coords[p][0] + delta;
+        // shiftedPoints[0] = coords[p][0] + linearDelta(level);
+        //shiftedPoints[0] = coords[p][0] + powerDelta(level);
+        shiftedPoints[0] = coords[p][0] + sineDelta(level, number);
+        shiftedPoints[1] = coords[p][1];
+
+        shiftedCoords.push(shiftedPoints);
+
+        shiftedPoints = [];
+    }
+
+    //console.log(shiftedCoords);
+
+    return shiftedCoords;
+}
+
 for (let level = 1, number = config.numberLevel; level <= number; level += 1) {
     //console.log('level: ', level);
 
     let facet = new Facet({
         height: config.heightLevel,
-        coords: config.coords,
+        coords: getCoords(config.coords, level, number),
         level,
         color: getHSL(level, number)
     });
