@@ -623,8 +623,8 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiZ3J5bXlrIiwiYSI6ImNqM3JtZHl4MzAxZGkydm82eGZrN
 
 var map = new mapboxgl.Map({
     style: 'mapbox://styles/mapbox/light-v9',
-    center: [-122.418608, 37.807246],
-    zoom: 17,
+    center: [-122.416608, 37.808246],
+    zoom: 18,
     pitch: 70,
     bearing: 20,
     container: 'map'
@@ -775,7 +775,9 @@ var building = [];
 //console.log( get3DCoors(config) );
 
 function getHSL(level, numberLevel) {
-    var HUE_RANGE = 360;
+
+    var spectrum = 360;
+    var HUE_RANGE = spectrum;
 
     var hue = HUE_RANGE / numberLevel * level;
     var saturations = '50%';
@@ -812,13 +814,111 @@ function sineDelta(level, period) {
 }
 
 function linearDelta(x) {
-    //console.log(x);
-
     var delta = 0.00001;
     //const K = 2;
     var B = 0;
 
     return delta * x + B;
+}
+
+// A -- 37.807117, -122.417249
+// B -- 37.807318, -122.415683
+function getStreetAngle() {
+    var a = {};
+    a.x = -122.417249;
+    a.y = 37.807117;
+
+    var b = {};
+    b.x = -122.415683;
+    b.y = 37.807318;
+
+    var dx = b.x - a.x;
+    var dy = b.y - a.y;
+
+    return Math.atan(dy / dx);
+}
+
+// CENTER
+// (x1 + x3) / 2
+// (y1 + y3) / 2;
+
+function getCenterBuilding(coords, indexA, indexB) {
+    var ax = coords[indexA][0];
+    var ay = coords[indexA][1];
+    var bx = coords[indexB][0];
+    var by = coords[indexB][1];
+
+    var x = (ax + bx) / 2;
+    var y = (by + by) / 2;
+
+    return { x: x, y: y };
+}
+
+// RADIUS
+// SQRT( (Xc - x1) ^ 2 + (Yc + y1) ^2 );
+
+function getRadiusBuilding(center, point) {
+    var dx = center.x - point.x;
+    var dy = center.y - point.y;
+
+    return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+}
+
+// ANGEL
+// a = Math.PI / 4
+function getOriginPoints(center, radius, angle) {
+    var origin = [];
+
+    for (var i = 0, step = Math.PI / 2, points = [], len = 4; i < len; i += 1) {
+        // let alpha = step * i + alpha0;
+        var alpha = step * i + angle;
+
+        points[0] = center.x + radius * Math.cos(alpha);
+        points[1] = center.y + radius * Math.sin(alpha);
+
+        origin.push(points);
+
+        points = [];
+    }
+
+    return origin;
+}
+
+function getPolygonPoint(polygon, index) {
+    var point = {};
+
+    point.x = polygon[index][0];
+    point.y = polygon[index][1];
+
+    return point;
+}
+
+function getRadiusDelta(radius0, number) {
+    return radius0 / (number + 1);
+}
+
+function getAngleDelta(angle0, number) {
+    return 2 * Math.PI / number;
+}
+
+function getPolarCoords(coords, level, number) {
+    var center = getCenterBuilding(coords, 1, 3);
+
+    var radius0 = 0.0002;
+
+    var angle0 = Math.PI / 4;
+    angle0 += getStreetAngle();
+
+    var deltaRadius = getRadiusDelta(radius0, number);
+    var deltaAngle = getAngleDelta(angle0, number);
+
+    var radius = -deltaRadius * level + radius0;
+    var angle = deltaAngle * level + angle0;
+
+    var points = getOriginPoints(center, radius, angle);
+    //console.log(points);
+
+    return points;
 }
 
 function getCoords(coords, level, number) {
@@ -834,6 +934,8 @@ function getCoords(coords, level, number) {
         //shiftedPoints[0] = coords[p][0] + delta;
         // shiftedPoints[0] = coords[p][0] + linearDelta(level);
         //shiftedPoints[0] = coords[p][0] + powerDelta(level);
+
+        // sine()
         shiftedPoints[0] = coords[p][0] + sineDelta(level, number);
         shiftedPoints[1] = coords[p][1];
 
@@ -848,11 +950,10 @@ function getCoords(coords, level, number) {
 }
 
 for (var level = 1, number = _config2.default.numberLevel; level <= number; level += 1) {
-    //console.log('level: ', level);
-
     var facet = new _factoryFacet2.default({
         height: _config2.default.heightLevel,
-        coords: getCoords(_config2.default.coords, level, number),
+        //coords: getCoords(config.coords, level, number),
+        coords: getPolarCoords(_config2.default.coords, level, number),
         level: level,
         color: getHSL(level, number)
     });
