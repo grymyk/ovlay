@@ -5,7 +5,7 @@ let color = {};
 color.getHSL = function getHSL(level, numberLevel) {
 
     let spectrum = 360;
-    const HUE_RANGE = spectrum ;
+    const HUE_RANGE = numberLevel * 2;
 
     let hue = (HUE_RANGE / numberLevel) * level;
     let saturations = '50%';

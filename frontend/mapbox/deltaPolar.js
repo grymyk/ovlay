@@ -3,7 +3,7 @@
 let polar = {};
 
 polar.getRadius = function getRadius(radius0, number) {
-    return radius0 / (number + 1);
+    return radius0 / number;
 };
 
 polar.getAngle = function getAngle(angle0, number) {

@@ -47,7 +47,7 @@ function getPolarCoords(coords, level, number) {
     let deltaRadius = polar.getRadius(radius0, number);
     let deltaAngle = polar.getAngle(angle0, number);
 
-    let radius = - deltaRadius * level + radius0;
+    let radius = -deltaRadius * level + radius0;
     let angle = deltaAngle * level + angle0;
 
     return getOriginPoints(center, radius, angle);
@@ -76,33 +76,98 @@ function getCoords(coords, level, number) {
         shiftedPoints = [];
     }
 
-    //console.log(shiftedCoords);
-
     return shiftedCoords;
 }
 
-for (let level = 1, number = config.numberLevel; level <= number; level += 1) {
-    let facet = new Facet({
-        height: config.heightLevel,
-        coords: getCoords(config.coords, level, number),
-        //coords: getPolarCoords(config.coords, level, number),
-        level,
-        color: color.getHSL(level, number)
-    });
+function getCoords1(level, number, deltaFns) {
+    let center = coordinates.getCenterBuilding(config.coords, 1, 3);
 
-    //console.log(facet);
-    //console.log( facet.getCoords() );
-    //console.log( facet.getProps() );
+    let radius0 = 0.0002;
 
-    let floor = turf.polygon([facet.getCoords()], facet.getProps());
+    let angle0 = Math.PI / 4;
+    angle0 += coordinates.getStreetAngle();
 
-    building.push(floor);
+    let deltaRadius = deltaFns.radius(radius0, number);
+    let deltaAngle = deltaFns.angle(angle0, number);
 
-    facet = null;
-    floor = null;
+    let radius = -deltaRadius * level + radius0;
+    let angle = deltaAngle * level + angle0;
+
+    return getOriginPoints(center, radius, angle);
 }
 
-//console.log('building', building);
+function buildPart(range, deltaFns) {
+    for (let level = range.from, len = range.to; level < len; level += 1) {
+        let facet = new Facet({
+            height: config.heightLevel,
+            coords: getCoords1(level, len, deltaFns),
+            level,
+            color: color.getHSL(level, len)
+        });
+
+        let floor = turf.polygon([facet.getCoords()], facet.getProps());
+
+        building.push(floor);
+
+        facet = null;
+        floor = null;
+    }
+}
+
+let total = config.numberLevel;
+
+let footerNumber = {
+    from: 0,
+    to: 15
+};
+
+let bodyNumber = {
+    from: 15,
+    to: 21
+};
+
+let headNumber = {
+    from: 12,
+    to: 14
+};
+
+let parallelogram = {
+    radius: ()=> {return 0},
+    angle: ()=> {return 0}
+};
+
+let piramida = {
+    radius: (radius0, number)=> {
+        return (radius0) / (number * 2);
+    },
+    angle: ()=> {return 0}
+};
+
+buildPart(footerNumber, parallelogram);
+buildPart(bodyNumber, piramida);
+
+function buildAll() {
+    for (let level = 1, number = config.numberLevel; level <= number; level += 1) {
+        let facet = new Facet({
+            height: config.heightLevel,
+            //coords: getCoords(config.coords, level, number),
+            coords: getPolarCoords(config.coords, level, number),
+            level,
+            color: color.getHSL(level, number)
+        });
+
+        let floor = turf.polygon([facet.getCoords()], facet.getProps());
+
+        building.push(floor);
+
+        facet = null;
+        floor = null;
+    }
+}
+
+//buildAll();
+
+// console.log('building', building);
 
 let bottom = {
     props: {

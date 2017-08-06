@@ -845,33 +845,104 @@ function getCoords(coords, level, number) {
         shiftedPoints = [];
     }
 
-    //console.log(shiftedCoords);
-
     return shiftedCoords;
 }
 
-for (var level = 1, number = _config2.default.numberLevel; level <= number; level += 1) {
-    var facet = new _factoryFacet2.default({
-        height: _config2.default.heightLevel,
-        coords: getCoords(_config2.default.coords, level, number),
-        //coords: getPolarCoords(config.coords, level, number),
-        level: level,
-        color: _color2.default.getHSL(level, number)
-    });
+function getCoords1(level, number, deltaFns) {
+    var center = _coordinates2.default.getCenterBuilding(_config2.default.coords, 1, 3);
 
-    //console.log(facet);
-    //console.log( facet.getCoords() );
-    //console.log( facet.getProps() );
+    var radius0 = 0.0002;
 
-    var floor = turf.polygon([facet.getCoords()], facet.getProps());
+    var angle0 = Math.PI / 4;
+    angle0 += _coordinates2.default.getStreetAngle();
 
-    building.push(floor);
+    var deltaRadius = deltaFns.radius(radius0, number);
+    var deltaAngle = deltaFns.angle(angle0, number);
 
-    facet = null;
-    floor = null;
+    var radius = -deltaRadius * level + radius0;
+    var angle = deltaAngle * level + angle0;
+
+    return getOriginPoints(center, radius, angle);
 }
 
-//console.log('building', building);
+function buildPart(range, deltaFns) {
+    for (var level = range.from, len = range.to; level < len; level += 1) {
+        var facet = new _factoryFacet2.default({
+            height: _config2.default.heightLevel,
+            coords: getCoords1(level, len, deltaFns),
+            level: level,
+            color: _color2.default.getHSL(level, len)
+        });
+
+        var floor = turf.polygon([facet.getCoords()], facet.getProps());
+
+        building.push(floor);
+
+        facet = null;
+        floor = null;
+    }
+}
+
+var total = _config2.default.numberLevel;
+
+var footerNumber = {
+    from: 0,
+    to: 15
+};
+
+var bodyNumber = {
+    from: 15,
+    to: 21
+};
+
+var headNumber = {
+    from: 12,
+    to: 14
+};
+
+var parallelogram = {
+    radius: function radius() {
+        return 0;
+    },
+    angle: function angle() {
+        return 0;
+    }
+};
+
+var piramida = {
+    radius: function radius(radius0, number) {
+        return radius0 / (number * 2);
+    },
+    angle: function angle() {
+        return 0;
+    }
+};
+
+buildPart(footerNumber, parallelogram);
+buildPart(bodyNumber, piramida);
+
+function buildAll() {
+    for (var level = 1, number = _config2.default.numberLevel; level <= number; level += 1) {
+        var facet = new _factoryFacet2.default({
+            height: _config2.default.heightLevel,
+            //coords: getCoords(config.coords, level, number),
+            coords: getPolarCoords(_config2.default.coords, level, number),
+            level: level,
+            color: _color2.default.getHSL(level, number)
+        });
+
+        var floor = turf.polygon([facet.getCoords()], facet.getProps());
+
+        building.push(floor);
+
+        facet = null;
+        floor = null;
+    }
+}
+
+//buildAll();
+
+// console.log('building', building);
 
 var bottom = {
     props: {
@@ -1084,7 +1155,7 @@ var color = {};
 color.getHSL = function getHSL(level, numberLevel) {
 
     var spectrum = 360;
-    var HUE_RANGE = spectrum;
+    var HUE_RANGE = numberLevel * 2;
 
     var hue = HUE_RANGE / numberLevel * level;
     var saturations = '50%';
@@ -1627,7 +1698,7 @@ Object.defineProperty(exports, "__esModule", {
 var polar = {};
 
 polar.getRadius = function getRadius(radius0, number) {
-    return radius0 / (number + 1);
+    return radius0 / number;
 };
 
 polar.getAngle = function getAngle(angle0, number) {
