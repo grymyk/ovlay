@@ -764,9 +764,21 @@ var _geoPolygon = __webpack_require__(12);
 
 var _geoPolygon2 = _interopRequireDefault(_geoPolygon);
 
+var _color = __webpack_require__(13);
+
+var _color2 = _interopRequireDefault(_color);
+
+var _coordinates = __webpack_require__(31);
+
+var _coordinates2 = _interopRequireDefault(_coordinates);
+
+var _deltaPolar = __webpack_require__(32);
+
+var _deltaPolar2 = _interopRequireDefault(_deltaPolar);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var turf = __webpack_require__(13);
+var turf = __webpack_require__(14);
 // import facet from './facet.js';
 
 
@@ -774,103 +786,12 @@ var building = [];
 
 //console.log( get3DCoors(config) );
 
-function getHSL(level, numberLevel) {
-
-    var spectrum = 360;
-    var HUE_RANGE = spectrum;
-
-    var hue = HUE_RANGE / numberLevel * level;
-    var saturations = '50%';
-    var lightness = '50%';
-
-    return "hsl(" + hue + ", " + saturations + ", " + lightness + ")";
-}
-
-function getRGB(level, numberLevel) {
-    var BITE = 256;
-
-    var red = 60;
-    var green = Math.floor((BITE - green) / numberLevel) * level;
-    var blue = 181;
-
-    return "rgb(" + red + ", " + green + ", " + blue + ")";
-}
-
-function powerDelta(x) {
-    var base = Math.E;
-    var exponent = x;
-
-    return Math.pow(base, exponent);
-}
-
-function sineDelta(level, period) {
-    var numberPeriod = 4;
-    var frequency = 2 * Math.PI / period;
-
-    var alpha = frequency * numberPeriod * level;
-    var amplitude = Math.pow(10, -5) * 2;
-
-    return amplitude * Math.sin(alpha);
-}
-
-function linearDelta(x) {
-    var delta = 0.00001;
-    //const K = 2;
-    var B = 0;
-
-    return delta * x + B;
-}
-
-// A -- 37.807117, -122.417249
-// B -- 37.807318, -122.415683
-function getStreetAngle() {
-    var a = {};
-    a.x = -122.417249;
-    a.y = 37.807117;
-
-    var b = {};
-    b.x = -122.415683;
-    b.y = 37.807318;
-
-    var dx = b.x - a.x;
-    var dy = b.y - a.y;
-
-    return Math.atan(dy / dx);
-}
-
-// CENTER
-// (x1 + x3) / 2
-// (y1 + y3) / 2;
-
-function getCenterBuilding(coords, indexA, indexB) {
-    var ax = coords[indexA][0];
-    var ay = coords[indexA][1];
-    var bx = coords[indexB][0];
-    var by = coords[indexB][1];
-
-    var x = (ax + bx) / 2;
-    var y = (by + by) / 2;
-
-    return { x: x, y: y };
-}
-
-// RADIUS
-// SQRT( (Xc - x1) ^ 2 + (Yc + y1) ^2 );
-
-function getRadiusBuilding(center, point) {
-    var dx = center.x - point.x;
-    var dy = center.y - point.y;
-
-    return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-}
-
 // ANGEL
 // a = Math.PI / 4
 function getOriginPoints(center, radius, angle) {
     var origin = [];
 
     for (var i = 0, step = Math.PI / 2, points = [], len = 4; i < len; i += 1) {
-        // let alpha = step * i + alpha0;
         var alpha = step * i + angle;
 
         points[0] = center.x + radius * Math.cos(alpha);
@@ -884,41 +805,21 @@ function getOriginPoints(center, radius, angle) {
     return origin;
 }
 
-function getPolygonPoint(polygon, index) {
-    var point = {};
-
-    point.x = polygon[index][0];
-    point.y = polygon[index][1];
-
-    return point;
-}
-
-function getRadiusDelta(radius0, number) {
-    return radius0 / (number + 1);
-}
-
-function getAngleDelta(angle0, number) {
-    return 2 * Math.PI / number;
-}
-
 function getPolarCoords(coords, level, number) {
-    var center = getCenterBuilding(coords, 1, 3);
+    var center = _coordinates2.default.getCenterBuilding(coords, 1, 3);
 
     var radius0 = 0.0002;
 
     var angle0 = Math.PI / 4;
-    angle0 += getStreetAngle();
+    angle0 += _coordinates2.default.getStreetAngle();
 
-    var deltaRadius = getRadiusDelta(radius0, number);
-    var deltaAngle = getAngleDelta(angle0, number);
+    var deltaRadius = _deltaPolar2.default.getRadius(radius0, number);
+    var deltaAngle = _deltaPolar2.default.getAngle(angle0, number);
 
     var radius = -deltaRadius * level + radius0;
     var angle = deltaAngle * level + angle0;
 
-    var points = getOriginPoints(center, radius, angle);
-    //console.log(points);
-
-    return points;
+    return getOriginPoints(center, radius, angle);
 }
 
 function getCoords(coords, level, number) {
@@ -936,7 +837,7 @@ function getCoords(coords, level, number) {
         //shiftedPoints[0] = coords[p][0] + powerDelta(level);
 
         // sine()
-        shiftedPoints[0] = coords[p][0] + sineDelta(level, number);
+        shiftedPoints[0] = coords[p][0] + _deltaPolar2.default.sineDelta(level, number);
         shiftedPoints[1] = coords[p][1];
 
         shiftedCoords.push(shiftedPoints);
@@ -952,10 +853,10 @@ function getCoords(coords, level, number) {
 for (var level = 1, number = _config2.default.numberLevel; level <= number; level += 1) {
     var facet = new _factoryFacet2.default({
         height: _config2.default.heightLevel,
-        //coords: getCoords(config.coords, level, number),
-        coords: getPolarCoords(_config2.default.coords, level, number),
+        coords: getCoords(_config2.default.coords, level, number),
+        //coords: getPolarCoords(config.coords, level, number),
         level: level,
-        color: getHSL(level, number)
+        color: _color2.default.getHSL(level, number)
     });
 
     //console.log(facet);
@@ -1170,6 +1071,42 @@ exports.default = get3DCoors;
 
 /***/ }),
 /* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var color = {};
+
+color.getHSL = function getHSL(level, numberLevel) {
+
+    var spectrum = 360;
+    var HUE_RANGE = spectrum;
+
+    var hue = HUE_RANGE / numberLevel * level;
+    var saturations = '50%';
+    var lightness = '50%';
+
+    return "hsl(" + hue + ", " + saturations + ", " + lightness + ")";
+};
+
+color.getRGB = function getRGB(level, numberLevel) {
+    var BITE = 256;
+
+    var red = 60;
+    var green = Math.floor((BITE - green) / numberLevel) * level;
+    var blue = 181;
+
+    return "rgb(" + red + ", " + green + ", " + blue + ")";
+};
+
+exports.default = color;
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1596,6 +1533,131 @@ module.exports = {
     convertDistance: convertDistance,
     round: round
 };
+
+/***/ }),
+/* 15 */,
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var coords = {};
+
+// CENTER
+// (x1 + x3) / 2
+// (y1 + y3) / 2;
+
+coords.getCenterBuilding = function getCenterBuilding(coords, indexA, indexB) {
+    var ax = coords[indexA][0];
+    var ay = coords[indexA][1];
+    var bx = coords[indexB][0];
+    var by = coords[indexB][1];
+
+    var x = (ax + bx) / 2;
+    var y = (by + by) / 2;
+
+    return { x: x, y: y };
+};
+
+// RADIUS
+// SQRT( (Xc - x1) ^ 2 + (Yc + y1) ^2 );
+
+coords.getRadiusBuilding = function getRadiusBuilding(center, point) {
+    var dx = center.x - point.x;
+    var dy = center.y - point.y;
+
+    return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+};
+
+// A -- 37.807117, -122.417249
+// B -- 37.807318, -122.415683
+coords.getStreetAngle = function getStreetAngle() {
+    var a = {};
+    a.x = -122.417249;
+    a.y = 37.807117;
+
+    var b = {};
+    b.x = -122.415683;
+    b.y = 37.807318;
+
+    var dx = b.x - a.x;
+    var dy = b.y - a.y;
+
+    return Math.atan(dy / dx);
+};
+
+coords.getPolygonPoint = function getPolygonPoint(polygon, index) {
+    var x = polygon[index][0];
+    var y = polygon[index][1];
+
+    return { x: x, y: y };
+};
+
+exports.default = coords;
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var polar = {};
+
+polar.getRadius = function getRadius(radius0, number) {
+    return radius0 / (number + 1);
+};
+
+polar.getAngle = function getAngle(angle0, number) {
+    return 2 * Math.PI / number;
+};
+
+polar.powerDelta = function powerDelta(x) {
+    var base = Math.E;
+
+    return Math.pow(base, x);
+};
+
+polar.sineDelta = function sineDelta(level, period) {
+    var amplitude = Math.pow(10, -5) * 2;
+
+    var numberPeriod = 4;
+    var frequency = 2 * Math.PI / period;
+    var alpha = frequency * numberPeriod * level;
+
+    return amplitude * Math.sin(alpha);
+};
+
+polar.linearDelta = function linearDelta(x) {
+    var k = 0.00001;
+    var b = 0;
+
+    return k * x + b;
+};
+
+exports.default = polar;
 
 /***/ })
 /******/ ]);
