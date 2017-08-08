@@ -623,7 +623,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiZ3J5bXlrIiwiYSI6ImNqM3JtZHl4MzAxZGkydm82eGZrN
 
 var map = new mapboxgl.Map({
     style: 'mapbox://styles/mapbox/light-v9',
-    center: [-122.416608, 37.808246],
+    center: [-122.417608, 37.807246],
     zoom: 18,
     pitch: 70,
     bearing: 20,
@@ -768,17 +768,17 @@ var _color = __webpack_require__(13);
 
 var _color2 = _interopRequireDefault(_color);
 
-var _coordinates = __webpack_require__(31);
+var _coordinates = __webpack_require__(14);
 
 var _coordinates2 = _interopRequireDefault(_coordinates);
 
-var _deltaPolar = __webpack_require__(32);
+var _deltaPolar = __webpack_require__(15);
 
 var _deltaPolar2 = _interopRequireDefault(_deltaPolar);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var turf = __webpack_require__(14);
+var turf = __webpack_require__(16);
 // import facet from './facet.js';
 
 
@@ -851,7 +851,11 @@ function getCoords(coords, level, number) {
 function getCoords1(level, number, deltaFns) {
     var center = _coordinates2.default.getCenterBuilding(_config2.default.coords, 1, 3);
 
+    var PIRAMIDA_START_LEVEL = 15;
+    var PIRAMIDA_HEIGHT_LEVEL = 6;
     var radius0 = 0.0002;
+
+    var radius = radius0;
 
     var angle0 = Math.PI / 4;
     angle0 += _coordinates2.default.getStreetAngle();
@@ -859,7 +863,10 @@ function getCoords1(level, number, deltaFns) {
     var deltaRadius = deltaFns.radius(radius0, number);
     var deltaAngle = deltaFns.angle(angle0, number);
 
-    var radius = -deltaRadius * level + radius0;
+    if (level > PIRAMIDA_START_LEVEL) {
+        radius = -(radius0 / PIRAMIDA_HEIGHT_LEVEL) * (level - PIRAMIDA_START_LEVEL) + radius0;
+    }
+
     var angle = deltaAngle * level + angle0;
 
     return getOriginPoints(center, radius, angle);
@@ -1178,6 +1185,115 @@ exports.default = color;
 
 /***/ }),
 /* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var coords = {};
+
+// CENTER
+// (x1 + x3) / 2
+// (y1 + y3) / 2;
+
+coords.getCenterBuilding = function getCenterBuilding(coords, indexA, indexB) {
+    var ax = coords[indexA][0];
+    var ay = coords[indexA][1];
+    var bx = coords[indexB][0];
+    var by = coords[indexB][1];
+
+    var x = (ax + bx) / 2;
+    var y = (by + by) / 2;
+
+    return { x: x, y: y };
+};
+
+// RADIUS
+// SQRT( (Xc - x1) ^ 2 + (Yc + y1) ^2 );
+
+coords.getRadiusBuilding = function getRadiusBuilding(center, point) {
+    var dx = center.x - point.x;
+    var dy = center.y - point.y;
+
+    return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+};
+
+// A -- 37.807117, -122.417249
+// B -- 37.807318, -122.415683
+coords.getStreetAngle = function getStreetAngle() {
+    var a = {};
+    a.x = -122.417249;
+    a.y = 37.807117;
+
+    var b = {};
+    b.x = -122.415683;
+    b.y = 37.807318;
+
+    var dx = b.x - a.x;
+    var dy = b.y - a.y;
+
+    return Math.atan(dy / dx);
+};
+
+coords.getPolygonPoint = function getPolygonPoint(polygon, index) {
+    var x = polygon[index][0];
+    var y = polygon[index][1];
+
+    return { x: x, y: y };
+};
+
+exports.default = coords;
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var polar = {};
+
+polar.getRadius = function getRadius(radius0, number) {
+    return radius0 / number;
+};
+
+polar.getAngle = function getAngle(angle0, number) {
+    return 2 * Math.PI / number;
+};
+
+polar.powerDelta = function powerDelta(x) {
+    var base = Math.E;
+
+    return Math.pow(base, x);
+};
+
+polar.sineDelta = function sineDelta(level, period) {
+    var amplitude = Math.pow(10, -5) * 2;
+
+    var numberPeriod = 4;
+    var frequency = 2 * Math.PI / period;
+    var alpha = frequency * numberPeriod * level;
+
+    return amplitude * Math.sin(alpha);
+};
+
+polar.linearDelta = function linearDelta(x) {
+    var k = 0.00001;
+    var b = 0;
+
+    return k * x + b;
+};
+
+exports.default = polar;
+
+/***/ }),
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1604,131 +1720,6 @@ module.exports = {
     convertDistance: convertDistance,
     round: round
 };
-
-/***/ }),
-/* 15 */,
-/* 16 */,
-/* 17 */,
-/* 18 */,
-/* 19 */,
-/* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var coords = {};
-
-// CENTER
-// (x1 + x3) / 2
-// (y1 + y3) / 2;
-
-coords.getCenterBuilding = function getCenterBuilding(coords, indexA, indexB) {
-    var ax = coords[indexA][0];
-    var ay = coords[indexA][1];
-    var bx = coords[indexB][0];
-    var by = coords[indexB][1];
-
-    var x = (ax + bx) / 2;
-    var y = (by + by) / 2;
-
-    return { x: x, y: y };
-};
-
-// RADIUS
-// SQRT( (Xc - x1) ^ 2 + (Yc + y1) ^2 );
-
-coords.getRadiusBuilding = function getRadiusBuilding(center, point) {
-    var dx = center.x - point.x;
-    var dy = center.y - point.y;
-
-    return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-};
-
-// A -- 37.807117, -122.417249
-// B -- 37.807318, -122.415683
-coords.getStreetAngle = function getStreetAngle() {
-    var a = {};
-    a.x = -122.417249;
-    a.y = 37.807117;
-
-    var b = {};
-    b.x = -122.415683;
-    b.y = 37.807318;
-
-    var dx = b.x - a.x;
-    var dy = b.y - a.y;
-
-    return Math.atan(dy / dx);
-};
-
-coords.getPolygonPoint = function getPolygonPoint(polygon, index) {
-    var x = polygon[index][0];
-    var y = polygon[index][1];
-
-    return { x: x, y: y };
-};
-
-exports.default = coords;
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var polar = {};
-
-polar.getRadius = function getRadius(radius0, number) {
-    return radius0 / number;
-};
-
-polar.getAngle = function getAngle(angle0, number) {
-    return 2 * Math.PI / number;
-};
-
-polar.powerDelta = function powerDelta(x) {
-    var base = Math.E;
-
-    return Math.pow(base, x);
-};
-
-polar.sineDelta = function sineDelta(level, period) {
-    var amplitude = Math.pow(10, -5) * 2;
-
-    var numberPeriod = 4;
-    var frequency = 2 * Math.PI / period;
-    var alpha = frequency * numberPeriod * level;
-
-    return amplitude * Math.sin(alpha);
-};
-
-polar.linearDelta = function linearDelta(x) {
-    var k = 0.00001;
-    var b = 0;
-
-    return k * x + b;
-};
-
-exports.default = polar;
 
 /***/ })
 /******/ ]);

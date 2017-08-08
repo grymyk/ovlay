@@ -82,7 +82,11 @@ function getCoords(coords, level, number) {
 function getCoords1(level, number, deltaFns) {
     let center = coordinates.getCenterBuilding(config.coords, 1, 3);
 
+    const PIRAMIDA_START_LEVEL = 15;
+    const PIRAMIDA_HEIGHT_LEVEL = 6;
     let radius0 = 0.0002;
+
+    let radius = radius0;
 
     let angle0 = Math.PI / 4;
     angle0 += coordinates.getStreetAngle();
@@ -90,7 +94,10 @@ function getCoords1(level, number, deltaFns) {
     let deltaRadius = deltaFns.radius(radius0, number);
     let deltaAngle = deltaFns.angle(angle0, number);
 
-    let radius = -deltaRadius * level + radius0;
+    if (level > PIRAMIDA_START_LEVEL) {
+        radius = -(radius0 /PIRAMIDA_HEIGHT_LEVEL)  * (level - PIRAMIDA_START_LEVEL) + radius0;
+    }
+
     let angle = deltaAngle * level + angle0;
 
     return getOriginPoints(center, radius, angle);
